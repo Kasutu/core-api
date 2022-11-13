@@ -19,7 +19,7 @@ public class CoreController {
 
   @GetMapping(value = "/")
   public String getPage() {
-    return "Home page";
+    return "Depression";
   }
 
   @GetMapping(value = "/customers")
