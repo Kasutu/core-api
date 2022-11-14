@@ -10,6 +10,7 @@ pipeline {
     stage('build') {
       steps {
         echo 'Checking out...'
+        sh 'mvn -version'
 
         checkout([$class: 'GitSCM', branches: [[name: '*/dev']], extensions: [], userRemoteConfigs: [[credentialsId: '0e3807c4-6832-48f3-ba4c-d360c5ba58f9', url: 'https://github.com/Kasutu/core-api']]])
         sh 'mvn clean install'
@@ -36,12 +37,6 @@ pipeline {
           sh "docker push kasutu/coreapi:latest"
         }
       }
-    }
-  }
-
-  failure {
-    script {
-      sh 'mvn -version'
     }
   }
 }
