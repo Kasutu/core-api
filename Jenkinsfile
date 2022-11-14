@@ -11,7 +11,7 @@ pipeline {
       steps {
         sh 'mvn -version'
         sh 'java -version'
-        sh 'docker -version'
+        sh 'docker -v'
       }
     }
 
