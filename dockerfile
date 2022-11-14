@@ -1,4 +1,4 @@
-FROM openjdk:17
+FROM openjdk:13
 
 WORKDIR /app
 COPY ./target/core-api-0.0.1-SNAPSHOT.jar /app
