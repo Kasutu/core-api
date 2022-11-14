@@ -38,4 +38,10 @@ pipeline {
       }
     }
   }
+
+  failure {
+    script {
+      sh 'mvn -version'
+    }
+  }
 }
