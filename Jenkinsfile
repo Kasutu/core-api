@@ -12,7 +12,7 @@ pipeline {
         echo 'Checking out...'
 
         checkout([$class: 'GitSCM', branches: [[name: '*/dev']], extensions: [], userRemoteConfigs: [[credentialsId: '0e3807c4-6832-48f3-ba4c-d360c5ba58f9', url: 'https://github.com/Kasutu/core-api']]])
-        sh 'mvn clean install'
+        sh 'sudo mvn clean install'
       }
     }
 
@@ -20,7 +20,7 @@ pipeline {
       steps {
         echo 'teting app...'
 
-        sh 'mvn test'
+        sh 'sudo mvn test'
       }
     }
 
@@ -28,21 +28,29 @@ pipeline {
       steps {
         echo 'compiling app...'
 
-        sh 'mvn install'
+        sh 'sudo mvn install'
       }
     }
 
     stage('build docker image') {
       steps {
         script{
-          sh ''
+          sh 'sudo docker build -t kasutu/coreapi'
         }
       }
     }
 
     stage('deploy') {
       steps {
-        echo 'deploying app...'
+        echo 'pushing to docker hub...'
+
+        script {
+          withCredentials([string(credentialsId: 'docker-credentials-kasutu', variable: 'docker-credentials')]) {
+            sh "sudo docker login -u kasutu -p ${docker-credentials}"
+          }
+
+          sh "sudo docker push kasutu/coreapi:latest"
+        }
       }
     }
   }
