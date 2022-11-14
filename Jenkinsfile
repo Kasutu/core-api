@@ -21,7 +21,7 @@ pipeline {
     stage('build docker image') {
       steps {
         script{
-          sh 'systemctl start docker'
+          sh 'systemctl enable docker.service'
           sh 'docker build . -t kasutu/coreapi'
         }
       }
