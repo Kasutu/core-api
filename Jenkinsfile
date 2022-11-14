@@ -54,18 +54,4 @@ pipeline {
       }
     }
   }
-
-  post {
-    always {
-    // do always
-    }
-
-    success {
-    // on success
-    }
-
-    failure {
-    // on fail
-    }
-  }
 }
