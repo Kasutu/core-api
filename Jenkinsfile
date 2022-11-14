@@ -21,7 +21,7 @@ pipeline {
     stage('build docker image') {
       steps {
         script{
-          sh 'docker build . -t kasutu/coreapi'
+          sh 'docker build -t kasutu/coreapi .'
         }
       }
     }
