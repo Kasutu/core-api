@@ -54,11 +54,13 @@ pipeline {
 
   post {
     always {
-      discordSend description: '', enableArtifactsList: true, footer: '', image: '', link: 'https://kasutu-jenkins-dashboard.loca.lt/job/${env.JOB_NAME}', result: 'SUCCESS', scmWebUrl: 'https://github.com/Kasutu/core-api', showChangeset: true, thumbnail: 'https://imagepng.org/wp-content/uploads/2019/12/check-icone-2.png', title: 'env.JOB_NAME', webhookURL: 'https://discord.com/api/webhooks/1042083153721950208/Vqm_l65LLoa7CVpCIYGmLLpF4XduCeFWS3RQRF5wGiGDZRiK5TSdtUjJWAVlkgZK-d3b'
+      discordSend description: '', enableArtifactsList: true, footer: '', image: '', link: "https://kasutu-jenkins-dashboard.loca.lt/job/${env.JOB_NAME}", result: 'SUCCESS', scmWebUrl: 'https://github.com/Kasutu/core-api', showChangeset: true, thumbnail: 'https://imagepng.org/wp-content/uploads/2019/12/check-icone-2.png', title: 'env.JOB_NAME', webhookURL: 'https://discord.com/api/webhooks/1042083153721950208/Vqm_l65LLoa7CVpCIYGmLLpF4XduCeFWS3RQRF5wGiGDZRiK5TSdtUjJWAVlkgZK-d3b'
     }
 
     success {
-      setGitHubPullRequestStatus context: 'build sucess', message: '', state: 'SUCCESS'
+      if (env.GITHUB_PR_STATE == "open") {
+        setGitHubPullRequestStatus context: 'build sucess', message: '', state: 'SUCCESS'
+      }
     }
   }
 }
