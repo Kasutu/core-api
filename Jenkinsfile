@@ -8,40 +8,45 @@ pipeline {
 
   stages {
     stage('initialize') {
+      when { environment name: 'INIT', value: 'true' }
+
       steps {
-        sh 'mvn -version'
+        sh 'mvn -v'
         sh 'java -version'
+        sh 'git --version'
         sh 'docker -v'
       }
     }
 
     stage('build') {
-      steps {
-        echo 'Checking out...'
+      when { environment name: 'BUILD_MAVEN', value: 'true' }
 
-        checkout([$class: 'GitSCM', branches: [[name: '*/dev']], extensions: [], userRemoteConfigs: [[credentialsId: '0e3807c4-6832-48f3-ba4c-d360c5ba58f9', url: 'https://github.com/Kasutu/core-api']]])
+      steps {
+        checkout([$class: 'GitSCM', branches: [[name: '*/dev']], extensions: [], userRemoteConfigs: [[url: "${GIT_REPO_URL}"]]])
         sh 'mvn clean install'
       }
     }
 
     stage('build docker image') {
+      when { environment name: 'BUILD_DOCKER', value: 'true' }
+
       steps {
         script{
-          sh 'docker build -t kasutu/coreapi .'
+          sh "docker build -t ${IMAGE_TAG} ."
         }
       }
     }
 
     stage('deploy') {
-      steps {
-        echo 'pushing to docker hub...'
+      when { environment name: 'DEPLOY_DOCKER', value: 'true' }
 
+      steps {
         script {
-          withCredentials([string(credentialsId: 'docker-credentials-kasutu', variable: 'docker-credentials')]) {
-            sh "docker login -u kasutu -p ${docker-credentials}"
+          withCredentials([usernamePassword(credentialsId: 'docker-pwd', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
+            sh "docker login -u ${USERNAME} -p ${PASSWORD}"
           }
 
-          sh "docker push kasutu/coreapi:latest"
+          sh "docker push ${CONTAINER_NAME}"
         }
       }
     }
