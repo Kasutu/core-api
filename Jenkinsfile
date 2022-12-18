@@ -22,7 +22,7 @@ pipeline {
       when { environment name: 'BUILD_MAVEN', value: 'true' }
 
       steps {
-        checkout([$class: 'GitSCM', branches: [[name: '*/dev']], extensions: [], userRemoteConfigs: [[url: "${GIT_REPO_URL}"]]])
+        checkout([$class: 'GitSCM', branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[url: "${GIT_REPO_URL}"]]])
         sh 'mvn clean install'
       }
     }
