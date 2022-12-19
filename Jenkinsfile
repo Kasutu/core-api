@@ -8,8 +8,6 @@ pipeline {
 
   stages {
     stage('initialize') {
-      when { environment name: 'INIT', value: 'true' }
-
       steps {
         sh 'mvn -v'
         sh 'java -version'
@@ -19,7 +17,6 @@ pipeline {
     }
 
     stage('build') {
-      when { environment name: 'BUILD_MAVEN', value: 'true' }
 
       steps {
         checkout([$class: 'GitSCM', branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[url: "${GIT_REPO_URL}"]]])
@@ -28,7 +25,6 @@ pipeline {
     }
 
     stage('build docker image') {
-      when { environment name: 'BUILD_DOCKER', value: 'true' }
 
       steps {
         script{
@@ -38,7 +34,6 @@ pipeline {
     }
 
     stage('deploy') {
-      when { environment name: 'DEPLOY_DOCKER', value: 'true' }
 
       steps {
         script {
